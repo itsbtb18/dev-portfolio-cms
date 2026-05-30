@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+  cursor: none !important;
+}
+
+body, a, button, [role="button"], input, select, textarea, label {
+  cursor: none !important;
+}
+
+body {
+  margin: 0;
+  background: #030712;
+  color: #ffffff;
+  font-family: "Inter", "Outfit", sans-serif;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-glow-purple {
+  text-shadow: 0 0 20px rgba(168, 85, 247, 0.55), 0 0 40px rgba(168, 85, 247, 0.2);
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 25px rgba(56, 189, 248, 0.65), 0 0 50px rgba(56, 189, 248, 0.25);
+}
+
+::selection {
+  background: rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #030712;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.75), rgba(168, 85, 247, 0.75));
+  border-radius: 999px;
+}
+
+.animated-grid {
+  background-image: linear-gradient(to right, rgba(31, 41, 55, 0.75) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(31, 41, 55, 0.45) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(24px);
+}
+
+/* Nav link animated underline */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #38bdf8, #a78bfa);
+  border-radius: 999px;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Button hover glow animation */
+a[class*="rounded-full"],
+button[class*="rounded-full"] {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a[class*="rounded-full"]:hover,
+button[class*="rounded-full"]:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(56, 189, 248, 0.2);
+}
