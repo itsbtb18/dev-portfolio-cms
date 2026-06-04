@@ -138,11 +138,11 @@ const ProjectsShowcase = ({ projects = [], githubUrl }) => {
     >
       <div ref={containerRef} className="sticky top-0 h-screen overflow-hidden">
         {/* Heading */}
-        <div className="absolute left-6 top-10 z-20 sm:left-10 lg:top-12">
+        <div className="absolute left-4 top-6 z-20 sm:left-8 sm:top-8 lg:left-10 lg:top-12">
           <span className="rounded-full bg-sky-400/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.25em] text-sky-400">
             Projects
           </span>
-          <h2 className="mt-4 font-display text-4xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h2 className="mt-2 font-display text-3xl font-black tracking-tight text-white sm:text-4xl lg:text-6xl">
             My <span className="bg-gradient-to-r from-sky-400 to-violet-400 bg-clip-text text-transparent">Work</span>
           </h2>
         </div>
@@ -159,7 +159,7 @@ const ProjectsShowcase = ({ projects = [], githubUrl }) => {
         <motion.div
           ref={trackRef}
           style={{ x }}
-          className="flex h-full items-center pt-24 will-change-transform"
+          className="flex h-full items-center pt-28 sm:pt-28 lg:pt-24 will-change-transform"
         >
           {projects.map((project, index) => (
             <ProjectColumn key={project.id || getSlug(project)} project={project} index={index} />

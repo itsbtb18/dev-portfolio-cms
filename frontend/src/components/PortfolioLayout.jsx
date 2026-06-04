@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 
 const SocialIcon = ({ type }) => {
@@ -60,7 +61,18 @@ const SocialIcon = ({ type }) => {
 
 const BG_VIDEO_URL = `https://res.cloudinary.com/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dw3fctzln"}/video/upload/q_auto/bg-video_uhd2sq.mp4`;
 
+const NAV_LINKS = [
+  { href: "/#about",      label: "About Me" },
+  { href: "/#services",   label: "What I Do" },
+  { href: "/#projects",   label: "Projects" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#tech",       label: "Tech Stack" },
+  { href: "/#contact",    label: "Contact" },
+];
+
 const PortfolioLayout = ({ profile, children, noPt = false }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <div className="relative min-h-screen text-white font-sans selection:bg-sky-400/30 selection:text-white">
       {/* Fixed video background layer */}
@@ -76,33 +88,61 @@ const PortfolioLayout = ({ profile, children, noPt = false }) => {
       </video>
       {/* Dark overlay on top of video */}
       <div className="pointer-events-none fixed inset-0 z-[1] bg-[#030712]/55" />
-      {/* Header with static, high-contrast navbar links */}
+
+      {/* ── Header ── */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
-        <div className="mx-auto flex max-w-full items-center justify-between px-4 py-6">
+        <div className="mx-auto flex max-w-full items-center justify-between px-5 py-5">
           <Link to="/" className="text-2xl font-black tracking-[0.25em] font-display text-white">
             BTB
           </Link>
+
+          {/* Desktop nav */}
           <nav className="hidden items-center gap-8 text-sm font-bold uppercase tracking-[0.2em] text-white md:flex">
-            <a href="/#about" className="relative py-1">
-              About Me
-            </a>
-            <a href="/#services" className="relative py-1">
-              What I Do
-            </a>
-            <a href="/#projects" className="relative py-1">
-              Projects
-            </a>
-            <a href="/#experience" className="relative py-1">
-              Experience
-            </a>
-<a href="/#tech" className="relative py-1">
-              Tech Stack
-            </a>
-            <a href="/#contact" className="relative py-1">
-              Contact
-            </a>
+            {NAV_LINKS.map((l) => (
+              <a key={l.href} href={l.href} className="relative py-1 transition hover:text-sky-300">
+                {l.label}
+              </a>
+            ))}
           </nav>
+
+          {/* Mobile hamburger */}
+          <button
+            type="button"
+            onClick={() => setMenuOpen((o) => !o)}
+            className="flex flex-col items-center justify-center gap-[5px] md:hidden p-2"
+            aria-label="Toggle menu"
+          >
+            <span className={`block h-[2px] w-6 bg-white transition-all duration-300 ${menuOpen ? "translate-y-[7px] rotate-45" : ""}`} />
+            <span className={`block h-[2px] w-6 bg-white transition-all duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+            <span className={`block h-[2px] w-6 bg-white transition-all duration-300 ${menuOpen ? "-translate-y-[7px] -rotate-45" : ""}`} />
+          </button>
         </div>
+
+        {/* Mobile drawer */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden border-t border-white/10 bg-[#070b16]/95 backdrop-blur-xl"
+            >
+              <nav className="flex flex-col px-5 py-4 gap-1">
+                {NAV_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="rounded-xl px-4 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white/70 transition hover:bg-sky-400/10 hover:text-sky-300"
+                  >
+                    {l.label}
+                  </a>
+                ))}
+              </nav>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Floating social links fixed on left side */}

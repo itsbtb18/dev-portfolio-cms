@@ -84,19 +84,45 @@ const HomePage = ({ data }) => {
     <PortfolioLayout profile={profile} noPt={true}>
       {/* Hero Section */}
       <section className="relative overflow-hidden px-6 pb-0 pt-0">
-        <div className="mx-auto grid min-h-screen max-w-7xl items-end gap-10 lg:grid-cols-[1fr_1.4fr_1fr]">
-          
+        {/* ── Mobile hero (< lg) ── */}
+        <div className="flex min-h-screen flex-col items-center justify-center text-center lg:hidden pt-20 pb-10 gap-6">
+          <div className="absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-purple-600/25 to-sky-500/10 blur-[100px] pointer-events-none" />
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+            <span className="text-xl font-semibold tracking-wide text-sky-400 block">{profile.greeting}</span>
+            <h1 className="mt-3 text-4xl font-black tracking-tight text-white font-display leading-tight text-glow-cyan">
+              {profile.fullName}
+            </h1>
+            <div className="mt-3 text-2xl font-black uppercase leading-tight tracking-tight bg-gradient-to-r from-sky-400 via-violet-300 to-fuchsia-400 bg-clip-text text-transparent font-display">
+              Full Stack Developer<br />& AI Engineer
+            </div>
+          </motion.div>
+          <motion.img
+            src="https://res.cloudinary.com/dw3fctzln/image/upload/f_auto,q_auto/btb_ibrblj"
+            alt={profile.fullName}
+            initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, delay: 0.15 }}
+            className="relative z-10 h-[50vh] w-auto object-contain object-bottom filter drop-shadow-[0_15px_40px_rgba(0,0,0,0.8)] select-none"
+          />
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="flex flex-wrap justify-center gap-3">
+            <a href={`mailto:${profile.contactEmail}`} className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-7 py-3 text-sm font-extrabold uppercase tracking-wider text-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.4)] transition hover:scale-105">
+              Contact Me
+            </a>
+            <a href="#contact" className="inline-flex items-center gap-2 rounded-full bg-white/5 px-7 py-3 text-sm font-extrabold uppercase tracking-wider text-white transition hover:text-sky-300 hover:scale-105">
+              WhatsApp <ArrowIcon />
+            </a>
+          </motion.div>
+        </div>
+
+        {/* ── Desktop hero (≥ lg) ── */}
+        <div className="mx-auto hidden min-h-screen max-w-7xl items-end gap-10 lg:grid lg:grid-cols-[1fr_1.4fr_1fr]">
           <motion.div
             className="max-w-xl text-left self-center z-20"
             initial={{ x: -30, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
-            <motion.span 
+            <motion.span
               className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-wide text-sky-400 drop-shadow-[0_2px_8px_rgba(56,189,248,0.25)] block"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
             >
               {profile.greeting}
             </motion.span>
@@ -104,61 +130,41 @@ const HomePage = ({ data }) => {
               {profile.fullName}
             </h1>
             <div className="mt-8 flex flex-wrap gap-4">
-              <a
-                href={`mailto:${profile.contactEmail}`}
-                className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3.5 text-sm font-extrabold uppercase tracking-wider text-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.45)] hover:shadow-[0_0_40px_rgba(56,189,248,0.7)] hover:scale-105 transition-all duration-300"
-              >
+              <a href={`mailto:${profile.contactEmail}`} className="rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-3.5 text-sm font-extrabold uppercase tracking-wider text-slate-950 shadow-[0_0_30px_rgba(56,189,248,0.45)] hover:shadow-[0_0_40px_rgba(56,189,248,0.7)] hover:scale-105 transition-all duration-300">
                 Contact Me
               </a>
-              <a
-                href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 px-8 py-3.5 text-sm font-extrabold uppercase tracking-wider text-white transition-all duration-300 hover:text-sky-300 hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.05)]"
-              >
-                Download CV
-                <ArrowIcon />
+              <a href="#contact" className="group inline-flex items-center gap-2 rounded-full bg-white/5 hover:bg-white/10 px-8 py-3.5 text-sm font-extrabold uppercase tracking-wider text-white transition-all duration-300 hover:text-sky-300 hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                Get In Touch <ArrowIcon />
               </a>
             </div>
           </motion.div>
 
-          {/* Center Avatar Column — feet glued to hero bottom */}
           <motion.div
             className="relative flex items-end justify-center self-end z-10"
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            {/* Ambient Purple Backdrop Glow (Static to prevent layout color shifting) */}
             <div className="absolute bottom-1/4 left-1/2 -translate-x-1/2 h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-purple-600/30 to-sky-500/10 blur-[120px] pointer-events-none" />
-            
             <motion.img
               src="https://res.cloudinary.com/dw3fctzln/image/upload/f_auto,q_auto/btb_ibrblj"
               alt={profile.fullName}
-              className="relative z-10 h-[92vh] max-h-[950px] w-auto object-contain object-bottom filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.85)] select-none pointer-events-auto cursor-pointer"
-              whileHover={{ 
-                scale: 1.05, 
-                filter: "drop-shadow(0 0 50px rgba(56, 189, 248, 0.75))",
-                transition: { duration: 0.3, ease: "easeOut" }
-              }}
+              className="relative z-10 h-[92vh] max-h-[950px] w-auto object-contain object-bottom filter drop-shadow-[0_20px_50px_rgba(0,0,0,0.85)] select-none cursor-pointer"
+              whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 50px rgba(56, 189, 248, 0.75))", transition: { duration: 0.3 } }}
             />
           </motion.div>
 
-          {/* Right Hero Column */}
           <motion.div
             className="flex flex-col gap-6 lg:items-end text-left lg:text-right self-center z-20"
-            initial={{ x: 30, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+            initial={{ x: 30, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
           >
             <div>
               <p className="text-xs uppercase font-extrabold tracking-[0.3em] text-white/50">Role</p>
-              <div className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black uppercase leading-[1.1] tracking-tight bg-gradient-to-r lg:bg-gradient-to-l from-sky-400 via-violet-300 to-fuchsia-400 bg-clip-text text-transparent font-display drop-shadow-[0_4px_10px_rgba(0,0,0,0.3)]">
+              <div className="mt-3 text-3xl sm:text-4xl lg:text-5xl font-black uppercase leading-[1.1] tracking-tight bg-gradient-to-r lg:bg-gradient-to-l from-sky-400 via-violet-300 to-fuchsia-400 bg-clip-text text-transparent font-display">
                 <span className="block whitespace-nowrap">Full Stack</span>
                 <span className="block whitespace-nowrap">Developer</span>
                 <span className="block text-sky-300 whitespace-nowrap">& AI Engineer</span>
               </div>
             </div>
           </motion.div>
-          
         </div>
       </section>
 

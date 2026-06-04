@@ -157,12 +157,13 @@ const TechStackShowcase = () => {
       </div>
 
       {/* ── Pyramid grid ── */}
-      {/* each row is nowrap — cards are 76px + 8px gap, row 1 max = 12×76+11×8 = 1000px < max-w-5xl */}
+      {/* Desktop: nowrap rows (76px cards, row 1 max = 1000px < max-w-5xl)
+          Mobile:  wrap freely so cards reflow without overflowing               */}
       <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-2">
         {ROWS.map((row, ri) => {
           const rowDelay = ri * 0.06;
           return (
-            <div key={ri} className="flex flex-nowrap justify-center gap-2">
+            <div key={ri} className="flex flex-wrap justify-center gap-2 md:flex-nowrap">
               {row.map((tech) => {
                 const d = rowDelay + (globalDelay++ % row.length) * 0.025;
                 return <TechCard key={tech.name} tech={tech} delay={d} />;
