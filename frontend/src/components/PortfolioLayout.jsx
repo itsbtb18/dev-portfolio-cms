@@ -89,16 +89,13 @@ const PortfolioLayout = ({ profile, children, noPt = false }) => {
             <a href="/#services" className="relative py-1">
               What I Do
             </a>
-            <a href="/#experience" className="relative py-1">
-              Experience
-            </a>
-            <a href="/#studies" className="relative py-1">
-              Studies
-            </a>
             <a href="/#projects" className="relative py-1">
               Projects
             </a>
-            <a href="/#tech" className="relative py-1">
+            <a href="/#experience" className="relative py-1">
+              Experience
+            </a>
+<a href="/#tech" className="relative py-1">
               Tech Stack
             </a>
             <a href="/#contact" className="relative py-1">

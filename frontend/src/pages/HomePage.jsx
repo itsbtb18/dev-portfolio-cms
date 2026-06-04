@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import PortfolioLayout from "../components/PortfolioLayout";
+import ProjectsShowcase from "../components/ProjectsShowcase";
+import TechStackShowcase from "../components/TechStackShowcase";
 import { createPortfolioSlug } from "../data/portfolioContent";
 
 const ArrowIcon = () => (
@@ -34,6 +37,45 @@ const Pill = ({ children }) => (
     {children}
   </span>
 );
+
+const EmailButton = ({ email }) => {
+  const [copied, setCopied] = useState(false);
+
+  const handleClick = () => {
+    // Try mailto first
+    window.location.href = `mailto:${email}`;
+    // Also copy to clipboard as fallback
+    navigator.clipboard?.writeText(email).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    });
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      className="group inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-sky-400 to-cyan-500 px-8 py-4 text-sm font-extrabold uppercase tracking-wider text-slate-950 shadow-[0_0_35px_rgba(56,189,248,0.4)] transition-all duration-300 hover:scale-105 hover:shadow-[0_0_50px_rgba(56,189,248,0.65)]"
+    >
+      {copied ? (
+        <>
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+          Email Copied!
+        </>
+      ) : (
+        <>
+          <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+            <polyline points="22,6 12,13 2,6" />
+          </svg>
+          Send an Email
+        </>
+      )}
+    </button>
+  );
+};
 
 const HomePage = ({ data }) => {
   const { profile, experiences, projects, skills, academicYears = [] } = data;
@@ -122,8 +164,9 @@ const HomePage = ({ data }) => {
 
       {/* About Section */}
       <section id="about" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
-        <div className="mx-auto max-w-4xl text-center relative">
+        <div className="mx-auto max-w-7xl relative">
           <motion.div
+            className="text-center"
             initial={{ y: 30, opacity: 0 }}
             whileInView={{ y: 0, opacity: 1 }}
             viewport={{ once: true, amount: 0.2 }}
@@ -133,59 +176,65 @@ const HomePage = ({ data }) => {
               About Me
             </h2>
           </motion.div>
-          
-          <motion.div
-            className="mt-10 space-y-6 text-left"
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
-          >
-            <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
-              Hi, I'm Bettayeb Mohamed Aimen. I am a Full Stack Developer, AI Engineer, and a tech builder driven by the challenge of transforming complex data structures into elegant, scalable software products. My work exists at the intersection of robust backend architectures and intelligent processing systems. I specialize in building highly scalable web applications, designing multi-tenant SaaS ecosystems, and deploying practical applied AI solutions from scratch.
-            </p>
-            <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
-              With a solid background in engineering and active freelance experience automating digital workflows for clients, I approach software with a single goal: turning complex, technical challenges into smooth, interactive user experiences.
-            </p>
-            <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
-              Currently pushing the boundaries of my tech stack and pursuing advanced studies in Information and Communication Engineering at UESTC in China, I am constantly exploring what's next in systems design, intelligent systems, and automated infrastructure.
-            </p>
-          </motion.div>
-          
-          <motion.p
-            className="mt-8 text-sm sm:text-base text-sky-400/80 font-medium tracking-wide text-left"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-          >
-            Scroll down to explore my career timeline, the stack I deploy, and the projects I've brought to life.
-          </motion.p>
 
-          {/* Massive Character PNG btb2_veheiq placed under the text at the bottom right */}
-          <motion.div
-            className="mt-12 flex justify-end"
-            initial={{ y: 30, opacity: 0 }}
-            whileInView={{ y: 0, opacity: 1 }}
-            viewport={{ once: true, amount: 0.15 }}
-            transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
-          >
-            <div className="relative">
-              {/* Soft backdrop glow behind character */}
-              <div className="absolute bottom-0 right-0 h-[380px] w-[380px] rounded-full bg-gradient-to-tr from-sky-500/20 to-purple-600/10 blur-[100px] pointer-events-none z-0" />
-              
-              <motion.img
-                src="https://res.cloudinary.com/dw3fctzln/image/upload/f_auto,q_auto/btb2_veheiq"
-                alt="About Bettayeb Mohamed Aimen character"
-                className="relative z-10 w-full max-w-[420px] sm:max-w-[480px] md:max-w-[540px] object-contain object-bottom filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.7)] select-none pointer-events-auto cursor-pointer"
-                whileHover={{ 
-                  scale: 1.05, 
-                  filter: "drop-shadow(0 0 45px rgba(56, 189, 248, 0.65))",
-                  transition: { duration: 0.3, ease: "easeOut" }
-                }}
-              />
+          {/* Two-column layout: description on the left, 3D character on the right at the same level */}
+          <div className="mt-12 grid items-center gap-12 lg:grid-cols-[1.4fr_1fr]">
+            {/* Left: description text */}
+            <div>
+              <motion.div
+                className="space-y-6 text-left"
+                initial={{ y: 30, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true, amount: 0.15 }}
+                transition={{ duration: 0.7, ease: "easeOut", delay: 0.15 }}
+              >
+                <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
+                  Hi, I'm Bettayeb Mohamed Aimen. I am a Full Stack Developer, AI Engineer, and a tech builder driven by the challenge of transforming complex data structures into elegant, scalable software products. My work exists at the intersection of robust backend architectures and intelligent processing systems. I specialize in building highly scalable web applications, designing multi-tenant SaaS ecosystems, and deploying practical applied AI solutions from scratch.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
+                  With a solid background in engineering and active freelance experience automating digital workflows for clients, I approach software with a single goal: turning complex, technical challenges into smooth, interactive user experiences.
+                </p>
+                <p className="text-base sm:text-lg leading-relaxed text-white/75 font-sans">
+                  Currently pushing the boundaries of my tech stack and pursuing advanced studies in Information and Communication Engineering at UESTC in China, I am constantly exploring what's next in systems design, intelligent systems, and automated infrastructure.
+                </p>
+              </motion.div>
+
+              <motion.p
+                className="mt-8 text-sm sm:text-base text-sky-400/80 font-medium tracking-wide text-left"
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Scroll down to explore my career timeline, the stack I deploy, and the projects I've brought to life.
+              </motion.p>
             </div>
-          </motion.div>
+
+            {/* Right: Massive Character PNG btb2_veheiq, centered with the description */}
+            <motion.div
+              className="flex justify-center lg:justify-end"
+              initial={{ x: 30, opacity: 0 }}
+              whileInView={{ x: 0, opacity: 1 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.7, ease: "easeOut", delay: 0.2 }}
+            >
+              <div className="relative">
+                {/* Soft backdrop glow behind character */}
+                <div className="absolute inset-0 m-auto h-[380px] w-[380px] rounded-full bg-gradient-to-tr from-sky-500/20 to-purple-600/10 blur-[100px] pointer-events-none z-0" />
+
+                <motion.img
+                  src="https://res.cloudinary.com/dw3fctzln/image/upload/f_auto,q_auto/btb2_veheiq"
+                  alt="About Bettayeb Mohamed Aimen character"
+                  className="relative z-10 w-full max-w-[360px] sm:max-w-[420px] md:max-w-[480px] object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.7)] select-none pointer-events-auto cursor-pointer"
+                  whileHover={{
+                    scale: 1.05,
+                    filter: "drop-shadow(0 0 45px rgba(56, 189, 248, 0.65))",
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
+                />
+              </div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -268,6 +317,9 @@ const HomePage = ({ data }) => {
         </div>
       </section>
 
+      {/* Projects Section — pinned horizontal scroll */}
+      <ProjectsShowcase projects={projects} githubUrl={profile.github} />
+
       {/* Experience Section */}
       <section id="experience" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
         <div className="mx-auto max-w-7xl">
@@ -295,12 +347,6 @@ const HomePage = ({ data }) => {
                       <h3 className="mt-3 text-xl font-bold text-white font-display">{experience.role}</h3>
                       <p className="mt-1 text-xs text-white/50">{experience.company}</p>
                     </div>
-                    <Link
-                      to={`/experience/${slug}`}
-                      className="group inline-flex items-center gap-2 self-start rounded-full border border-white/10 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.15em] text-white/70 transition duration-300 hover:border-sky-400/50 hover:bg-sky-400/5 hover:text-sky-300"
-                    >
-                      View Role Details <ArrowIcon />
-                    </Link>
                   </div>
                   <div className="mt-4 space-y-2 max-w-3xl text-xs sm:text-sm text-white/60 font-sans">
                     {experience.highlights?.map((highlight, highlightIndex) => (
@@ -317,160 +363,46 @@ const HomePage = ({ data }) => {
         </div>
       </section>
 
-      {/* Studies & Academic/Founder Milestones Section */}
-      <section id="studies" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Studies & Milestones"
-            title="Academic & founder milestones"
-            description="My core computer science education at USTHB and my co-founding journey building platforms at ILMI."
-          />
-          <div className="grid gap-6 md:grid-cols-2">
-            {academicYears.map((item, index) => (
-              <motion.div
-                key={item.id}
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, amount: 0.3 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.08 }}
-                className="rounded-[2rem] border border-white/5 bg-white/5 p-6 backdrop-blur-md hover:border-sky-400/20 transition-all duration-300 group"
-              >
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-[10px] font-bold tracking-widest text-sky-400 bg-sky-400/10 px-3 py-1 rounded-full uppercase">
-                    {item.year}
-                  </span>
-                  <div className="h-8 w-8 rounded-xl bg-white/5 flex items-center justify-center text-white/40 group-hover:text-sky-400 group-hover:bg-sky-400/10 transition-colors duration-300">
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" />
-                    </svg>
-                  </div>
-                </div>
-                <h3 className="mt-5 text-xl font-bold text-white font-display">{item.title}</h3>
-                <p className="mt-1 text-xs text-white/40 font-medium">{item.institution}</p>
-                <p className="mt-3.5 text-xs sm:text-sm leading-relaxed text-white/60">{item.description}</p>
-                <div className="mt-4 pt-4 border-t border-white/5 grid gap-2">
-                  {item.highlights?.map((h, i) => (
-                    <div key={i} className="flex items-center gap-2 text-xs text-white/55">
-                      <span className="h-1.5 w-1.5 rounded-full bg-sky-400" />
-                      <span>{h}</span>
-                    </div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Projects Section */}
-      <section id="projects" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Projects"
-            title="Select projects from my portfolio"
-            description="Polished software products featuring detailed technology stacks and performance highlights."
-          />
-          <div className="grid gap-6 md:grid-cols-3">
-            {projects.map((project, index) => {
-              const slug = getSlug(project, ["title"]);
-              const stackBadges = project.stack.split(",").map((entry) => entry.trim()).filter(Boolean);
-              return (
-                <motion.article
-                  key={project.id || slug}
-                  initial={{ y: 20, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, amount: 0.35 }}
-                  transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.05 }}
-                  className="group relative overflow-hidden rounded-[2rem] border border-white/5 bg-white/5 hover:border-sky-400/20 backdrop-blur-md transition-all duration-300 flex flex-col justify-between"
-                >
-                  <Link to={`/projects/${slug}`} className="block h-full">
-                    <div className="relative p-6 flex flex-col h-full justify-between gap-6">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <span className="text-[10px] font-bold text-white/40 font-display">0{project.id}</span>
-                          <h3 className="mt-2 text-xl font-bold text-white font-display group-hover:text-sky-300 transition duration-300">{project.title}</h3>
-                        </div>
-                        <span className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition group-hover:border-sky-400/50 group-hover:text-sky-300">
-                          <ExternalIcon />
-                        </span>
-                      </div>
-                      
-                      <p className="text-xs sm:text-sm leading-relaxed text-white/60">{project.description}</p>
-                      
-                      <div className="flex flex-wrap gap-1.5 pt-4 border-t border-white/5">
-                        {stackBadges.slice(0, 5).map((badge) => (
-                          <span key={badge} className="rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-white/50 hover:text-sky-300 transition duration-300">
-                            {badge}
-                          </span>
-                        ))}
-                        {stackBadges.length > 5 ? (
-                          <span className="rounded-full border border-white/5 bg-white/5 px-2.5 py-1 text-[10px] font-medium text-white/40">
-                            +{stackBadges.length - 5} more
-                          </span>
-                        ) : null}
-                      </div>
-                    </div>
-                  </Link>
-                </motion.article>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* Tech Stack Section */}
-      <section id="tech" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
-        <div className="mx-auto max-w-7xl">
-          <SectionHeading
-            eyebrow="Tech Stack"
-            title="Backend, frontend, and infrastructure"
-            description="My core technical toolkit, refined through school, professional, and product builds."
-          />
-          <div className="grid gap-6 sm:grid-cols-3">
-            {skills.map((group, index) => (
-              <motion.div
-                key={group.id}
-                initial={{ y: 20, opacity: 0 }}
-                whileInView={{ y: 0, opacity: 1 }}
-                viewport={{ once: true, amount: 0.35 }}
-                transition={{ duration: 0.5, ease: "easeOut", delay: index * 0.05 }}
-                className="rounded-[2rem] border border-white/5 bg-white/5 p-6 backdrop-blur-md hover:border-sky-400/20 transition-all duration-300"
-              >
-                <h3 className="text-xs uppercase font-bold tracking-[0.2em] text-sky-400">{group.category}</h3>
-                <div className="mt-5 flex flex-wrap gap-2">
-                  {group.items.map((item) => (
-                    <span key={item} className="rounded-full border border-white/5 bg-white/5 px-3 py-1.5 text-xs text-white/70 hover:bg-sky-400/5 hover:text-sky-300 hover:border-sky-400/10 transition duration-300">
-                      {item}
-                    </span>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TechStackShowcase />
 
       {/* Contact Section */}
       <section id="contact" className="px-6 pt-24 lg:pt-28 pb-24 lg:pb-36 relative z-20">
         <div className="mx-auto max-w-7xl rounded-[2.5rem] border border-white/5 bg-white/5 p-8 sm:p-12 backdrop-blur-md relative overflow-hidden">
-          {/* Ambient Glow in Contact */}
-          <div className="absolute right-0 bottom-0 h-40 w-40 rounded-full bg-sky-500/5 blur-[50px] pointer-events-none" />
-          <div className="relative z-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+          {/* Glows */}
+          <div className="pointer-events-none absolute -right-12 -top-12 h-56 w-56 rounded-full bg-sky-500/10 blur-[80px]" />
+          <div className="pointer-events-none absolute -left-12 -bottom-12 h-56 w-56 rounded-full bg-violet-600/8 blur-[80px]" />
+
+          <div className="relative z-10 flex flex-col items-center text-center gap-8">
             <div>
               <span className="text-[10px] uppercase font-bold tracking-widest text-sky-400 bg-sky-400/10 px-3 py-1 rounded-full">Get In Touch</span>
-              <h2 className="mt-5 text-3xl font-bold tracking-tight text-glow-cyan text-white font-display">Let’s build something serious.</h2>
-              <p className="mt-3 text-xs sm:text-sm leading-relaxed text-white/50">
-                If you want a product that feels premium, fast, and deliberate, reach out and I’ll help shape and ship it.
+              <h2 className="mt-5 text-4xl sm:text-5xl font-black tracking-tight text-white font-display">
+                Let’s build something <span className="bg-gradient-to-r from-sky-400 to-cyan-300 bg-clip-text text-transparent">serious.</span>
+              </h2>
+              <p className="mt-4 max-w-xl mx-auto text-sm leading-relaxed text-white/45">
+                Have a project in mind or want to collaborate? Reach out directly — I respond fast.
               </p>
             </div>
-            <div className="flex flex-wrap gap-3 lg:justify-end">
-              <a href={`mailto:${profile.contactEmail}`} className="rounded-full bg-sky-400 px-6 py-3 text-xs font-bold text-slate-950 shadow-[0_0_25px_rgba(56,189,248,0.3)] transition duration-300 hover:scale-[1.03] hover:bg-sky-300">
-                Email Me
-              </a>
-              <a href="#" className="rounded-full border border-white/10 bg-white/5 px-6 py-3 text-xs font-bold text-white/80 transition duration-300 hover:border-sky-400/50 hover:bg-sky-400/5 hover:text-sky-300">
-                Download Resume
+
+            <div className="flex flex-wrap justify-center gap-4">
+              {/* Email — opens mail client; also copies address as fallback */}
+              <EmailButton email={profile.contactEmail} />
+
+              {/* WhatsApp */}
+              <a
+                href={profile.whatsapp || "https://wa.me/213"}
+                target="_blank"
+                rel="noreferrer"
+                className="group inline-flex items-center gap-3 rounded-full border border-white/15 bg-white/5 px-8 py-4 text-sm font-extrabold uppercase tracking-wider text-white/80 backdrop-blur-md transition-all duration-300 hover:scale-105 hover:border-[#25D366]/50 hover:bg-[#25D366]/10 hover:text-[#25D366] hover:shadow-[0_0_35px_rgba(37,211,102,0.25)]"
+              >
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                Chat on WhatsApp
               </a>
             </div>
+
+            {/* Email address displayed */}
+            <p className="text-xs text-white/25 tracking-widest font-mono">{profile.contactEmail}</p>
           </div>
         </div>
       </section>
